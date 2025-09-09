@@ -1,0 +1,19 @@
+{
+  "name": "multi-arb-bot",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@solana/web3.js": "^1.98.4",
+    "dotenv": "^17.2.2",
+    "ethers": "^6.15.0",
+    "tronweb": "^6.0.4",
+    "ws": "^8.18.3"
+  }
+}
