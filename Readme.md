@@ -37,8 +37,24 @@ cd multi-arb-bot
 npm install
 ```
 
+4. Create a `config.json` file in the root directory. The file should appear like the example given below:
+```json
+{
+    "oauthtoken": "<YOUR BITQUERY OAUTH TOKEN>"
+}
+```
+
 ## Run the Bot
-After setup, you can run the bot using the following command:
+After the setup is completed, you can run the bot by following the given instructions:
+
+1. Enter a `Currency/Token` Smart Contract address. For this tutorial, we have chosen: `0x2260fac5e5542a773aa44fbcfedf7c193bc2c599`, which is the smart contract address representing BTC on Ethereum, as shown below.
+
+```js
+run("0x2260fac5e5542a773aa44fbcfedf7c193bc2c599");
+```
+
+2. Run the script, using the given command:
+
 ```sh
 node index.js
 ```

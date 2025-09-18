@@ -1,7 +1,7 @@
 const { WebSocket } = require("ws");
 const config = require("./config.json");
 
-function detectArbitrage(quotes) {
+const detectArbitrage = (quotes) => {
   if (!Array.isArray(quotes) || quotes.length === 0) return false;
 
   // Map to simplified rows: price + network/market
@@ -32,12 +32,35 @@ function detectArbitrage(quotes) {
   return false;
 }
 
+const getCurrencyId = async (address) => {
+  const myHeaders = new Headers();
+  myHeaders.append("Content-Type", "application/json");
+  myHeaders.append("Authorization", `Bearer ${config.oauthtoken}`);
+
+  const raw = JSON.stringify({
+    "query": `query MyQuery {\n  Trading {\n    Tokens(\n      where: {Token: {Address: {is: \"${address}\"}}}\n      limit: {count: 1}\n    ) {\n      Currency {\n        Id\n      }\n    }\n  }\n}\n`,
+    "variables": "{}"
+  });
+
+  const requestOptions = {
+    method: "POST",
+    headers: myHeaders,
+    body: raw,
+    redirect: "follow"
+  };
+
+  const response = await fetch("https://streaming.bitquery.io/eap", requestOptions);
+  const result = JSON.parse(await response.text());
+  const currencyId = result.data.Trading.Tokens[0].Currency.Id;
+  return currencyId;
+}
 
 const executeArbitrage = (currencyId) => {
     console.log("Trade Executed for:", currencyId);
 }
 
-const run = (currencyId) => {
+const run = async (address) => {
+    const currencyId = await getCurrencyId(address);
     console.log("Currency Received:", currencyId);
     const bitqueryConnection = new WebSocket(
       "wss://streaming.bitquery.io/graphql?token=" + config.oauthtoken,
@@ -143,14 +166,12 @@ const run = (currencyId) => {
         case "data":
           let data = response.payload.data.Trading.Pairs[0];
           buffer.push(data);
-          // console.log(data);
           if (buffer.length >= 10) {
             if (detectArbitrage(buffer)){
               executeArbitrage(currencyId);
             } else {
               console.log("No opportunity detected");
             }
-            // console.log(buffer);
             buffer = []; // reset buffer after check
           }
           break;
@@ -178,4 +199,4 @@ const run = (currencyId) => {
 }
 
 
-run("bid:bitcoin");
+run("0x2260fac5e5542a773aa44fbcfedf7c193bc2c599");
