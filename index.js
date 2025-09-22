@@ -24,7 +24,8 @@ const detectArbitrage = (quotes) => {
     console.log(
       `Arbitrage Opportunity Detected!\n` +
       `Buy @ ${minRow.price} on ${minRow.network}/${minRow.market}\n` +
-      `Sell @ ${maxRow.price} on ${maxRow.network}/${maxRow.market}`
+      `Sell @ ${maxRow.price} on ${maxRow.network}/${maxRow.market}\n` +
+      `Spread of: ${parseFloat(maxRow.price) - parseFloat(minRow.price)} USD`
     );
     return true;
   }
