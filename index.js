@@ -99,9 +99,6 @@ const run = async (address) => {
                             Currency: { Id: { is: "${currencyId}" } }
                             QuoteCurrency: { Id: { is: "usdt" } }
                         }
-                        limit: { count: 10 }
-                        orderBy: { descending: Block_Time }
-                        limitBy: { by: Market_Address, count: 1 }
                         ) {
                         Currency {
                             Id
